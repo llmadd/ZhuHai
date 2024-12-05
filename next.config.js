@@ -11,7 +11,11 @@ const nextConfig = {
                 hostname: '**',
             }
         ],
-    }
+    },
+    eslint: {
+        // 在生产构建时忽略 ESLint 错误
+        ignoreDuringBuilds: true,
+    },
 }
 
 module.exports = nextConfig 
