@@ -9,14 +9,14 @@ import { Metadata } from "next"
 import { siteConfig } from "@/config/site"
 
 interface PostPageProps {
-    params: {
+    params: Promise<{
         slug: string
-    }
+    }>
 }
 
 export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
-    const slug = await Promise.resolve(params.slug)
-    const post = await getPostBySlug(slug, false)
+    const resolvedParams = await params
+    const post = await getPostBySlug(resolvedParams.slug, false)
     if (!post) return {}
 
     const ogImage = post.coverImage || siteConfig.ogImage
@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
             title: post.title,
             description: post.excerpt,
             type: 'article',
-            url: `${siteConfig.url}/posts/${params.slug}`,
+            url: `${siteConfig.url}/posts/${resolvedParams.slug}`,
             images: [{ url: ogImage, width: 1200, height: 630, alt: post.title }],
             publishedTime: post.date,
             authors: [post.author],
@@ -44,8 +44,8 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
 }
 
 export default async function PostPage({ params }: PostPageProps) {
-    const slug = (await Promise.resolve(params)).slug
-    const post = await getPostBySlug(slug, false)
+    const resolvedParams = await params
+    const post = await getPostBySlug(resolvedParams.slug, false)
 
     if (!post) {
         notFound()
