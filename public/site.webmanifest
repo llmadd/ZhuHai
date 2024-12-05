@@ -1,0 +1,16 @@
+{
+    "name": "ZhuHai.Fun",
+    "short_name": "ZhuHai.Fun",
+    "description": "分享技术文章和生活感悟的个人博客",
+    "start_url": "/",
+    "icons": [
+        {
+            "src": "/icon.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
+    "display": "standalone"
+}

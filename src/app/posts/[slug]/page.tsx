@@ -10,10 +10,51 @@ import { Suspense } from "react"
 import { PostHeader } from "@/components/posts/post-header"
 import { PostSidebar } from "@/components/posts/post-sidebar"
 import { getTableOfContents } from "@/lib/toc"
+import { Metadata } from "next"
+import { siteConfig } from "@/config/site"
 
 interface PostPageProps {
     params: {
         slug: string
+    }
+}
+
+export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
+    const post = await getPostBySlug(params.slug, false)
+
+    if (!post) {
+        return {}
+    }
+
+    const ogImage = post.coverImage || siteConfig.ogImage
+
+    return {
+        title: post.title,
+        description: post.excerpt,
+        authors: [{ name: post.author }],
+        openGraph: {
+            title: post.title,
+            description: post.excerpt,
+            type: 'article',
+            url: `${siteConfig.url}/posts/${params.slug}`,
+            images: [
+                {
+                    url: ogImage,
+                    width: 1200,
+                    height: 630,
+                    alt: post.title,
+                }
+            ],
+            publishedTime: post.date,
+            authors: [post.author],
+            tags: post.tags,
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: post.title,
+            description: post.excerpt,
+            images: [ogImage],
+        },
     }
 }
 
