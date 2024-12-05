@@ -1,6 +1,6 @@
 'use client'
 
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
 import { Search } from "lucide-react"
@@ -54,7 +54,10 @@ export function SearchDialog() {
             </Button>
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent className="sm:max-w-[425px]">
-                    <DialogTitle className="sr-only">搜索文章</DialogTitle>
+                    <DialogTitle>搜索文章</DialogTitle>
+                    <DialogDescription className="sr-only">
+                        在文章标题和内容中搜索
+                    </DialogDescription>
                     <div className="space-y-4">
                         <Input
                             placeholder="搜索文章..."
