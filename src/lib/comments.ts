@@ -20,7 +20,7 @@ export async function getComments(postSlug: string): Promise<Comment[]> {
         const filePath = path.join(commentsDirectory, `${postSlug}.yaml`)
         const fileContents = await fs.readFile(filePath, 'utf8')
         return yaml.load(fileContents) as Comment[] || []
-    } catch (error) {
+    } catch {
         return []
     }
 }

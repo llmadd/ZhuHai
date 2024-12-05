@@ -1,8 +1,6 @@
 'use client'
 
 import { Card } from "@/components/ui/card"
-import { format } from "date-fns"
-import { Tag } from "lucide-react"
 import Image from "next/image"
 import Markdown, { Components } from 'react-markdown'
 import slugify from 'slugify'
