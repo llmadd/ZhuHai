@@ -52,12 +52,7 @@ export function PostCard({ post }: PostCardProps) {
                         </div>
                         <div className="flex items-center gap-1">
                             <Folder className="w-4 h-4" />
-                            <Link
-                                href={`/categories/${post.category}`}
-                                className="hover:text-primary"
-                            >
-                                {post.category}
-                            </Link>
+                            <span>{post.category}</span>
                         </div>
                         {post.tags && post.tags.length > 0 && (
                             <div className="flex items-center gap-2">
@@ -76,17 +71,19 @@ export function PostCard({ post }: PostCardProps) {
                 </div>
 
                 {post.coverImage && (
-                    <div className="relative w-full md:w-[280px] h-[200px] md:h-[180px] flex-shrink-0 order-first md:order-last">
-                        <Image
-                            src={post.coverImage}
-                            alt={post.title}
-                            fill
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                            className="object-cover rounded-lg"
-                            {...(isExternalImage(post.coverImage) ? {
-                                unoptimized: true,
-                            } : {})}
-                        />
+                    <div className="relative w-full md:w-[280px] flex-shrink-0 order-first md:order-last">
+                        <div className="relative w-full aspect-[4/3] overflow-hidden rounded-lg">
+                            <Image
+                                src={post.coverImage}
+                                alt={post.title}
+                                fill
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                className="object-contain"
+                                {...(isExternalImage(post.coverImage) ? {
+                                    unoptimized: true,
+                                } : {})}
+                            />
+                        </div>
                     </div>
                 )}
             </div>

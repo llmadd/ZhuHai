@@ -88,7 +88,7 @@ export default function RootLayout({
                     target="_blank"
                     className="hover:text-primary transition-colors"
                   >
-                    UseAI.cn
+                    UseAI
                   </Link>
                   <span>•</span>
                   <Link

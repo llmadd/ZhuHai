@@ -86,4 +86,5 @@ def read_excel_with_encoding(file_path):
     return df
 ```
 
-这就是为什么你的解决方案有效 - 它显式地处理了编码转换过程，不依赖系统默认设置。
+这个也证明了，大模型问答中使用中文字符是比使用ASCII编码有更好的效果。
+
