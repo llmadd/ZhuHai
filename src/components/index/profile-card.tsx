@@ -30,7 +30,9 @@ export function ProfileCard() {
                     <span>✉️ zh@useai.cn</span>
                 </p>
                 <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-                    目前从事大模型算法工程师，会写一些自己遇到的问题和解决方案，菜鸟闯天涯，欢迎交流！
+                    目前从事大模型算法工程师，会写一些自己遇到的问题和解决方案。<br />
+                    ps:对不起，我的文章AI成分很浓，阅读请谨慎！（自己写文章太累啦）<br />
+                    菜鸟闯天涯，欢迎交流！
                 </p>
                 <div className="flex items-center justify-center gap-4 mb-8">
                     <TooltipProvider>

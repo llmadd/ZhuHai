@@ -1,6 +1,6 @@
 ---
 title: 关于一个AI搜索引擎 - 搜法律
-date: 2024-12-06
+date: '2024-12-06'
 author: 'Hai'
 coverImage: 'https://cdn-fusion.imgcdn.store/i/2024/1dcfb6355594d10b.png'
 tags: ['AI', '法律搜索引擎', '法律']
@@ -60,4 +60,5 @@ status: 'published'
 
 目前想法是一方面看有没有律所定制或者类似产品定制可以合作一下，另一方面就是搁置一段时间等闲暇时间优化一下把它开源。
 
-
+有兴趣的朋友可以体验一下：
+[搜法律](https://soufalv.com/)
