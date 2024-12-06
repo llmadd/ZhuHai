@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils"
 import { Metadata } from "next"
 import { siteConfig } from "@/config/site"
 import Link from "next/link"
+import { Analytics } from "@vercel/analytics/react"
 
 export const fontSans = FontSans({
   subsets: ["latin"],
@@ -74,7 +75,10 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="relative flex min-h-screen flex-col">
             <NavigationMenu className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60" />
-            <main className="flex-1">{children}</main>
+            <main className="flex-1">
+              {children}
+              <Analytics />
+            </main>
             <footer className="border-t">
               <div className="container flex items-center justify-center h-14">
                 <div className="flex items-center gap-4 text-sm text-muted-foreground">
