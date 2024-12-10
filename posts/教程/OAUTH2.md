@@ -1,6 +1,6 @@
 ---
 title: '关于Google、GitHub的三方登录'
-date: 2024-12-10
+date: '2024-12-10'
 author: 'Hai'
 coverImage: 'https://oauth.net/images/oauth-logo.svg'
 tags: ['OAUTH2.0', 'python', 'Google', 'Github']
@@ -282,3 +282,4 @@ oauth_handler = OAuthHandler()
 上面案例中使用fastapi实现案例,使用fastapi-jwt-auth实现jwt认证,也可以直接在回调中返回携带token的前端页面
 
 
+ps: GitHub本地调试中设置的URL仍然可能会因为非https而报错,可以使用使用[ngrok](https://ngrok.com/)进行调试,将本地服务映射到公网,然后使用公网地址进行调试。
