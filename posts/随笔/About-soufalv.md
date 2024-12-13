@@ -1,13 +1,13 @@
 ---
-title: 关于一个AI搜索引擎 - 搜法律
+title: 法律AI搜索引擎 - 搜法律
 date: '2024-12-06'
 author: 'Hai'
 coverImage: 'https://cdn-fusion.imgcdn.store/i/2024/1dcfb6355594d10b.png'
-tags: ['AI', '法律搜索引擎', '法律']
+tags: ['AI搜索', '法律AI搜索引擎', '法律']
 status: 'published'
 ---
 
-# 最近做了一个法律搜索引擎 - 搜法律
+# 法律AI搜索引擎 - 搜法律
 
 ## 为什么做
 
