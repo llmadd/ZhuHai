@@ -7,6 +7,7 @@ import { Metadata } from "next"
 import { siteConfig } from "@/config/site"
 import Link from "next/link"
 import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export const fontSans = FontSans({
   subsets: ["latin"],
@@ -78,6 +79,7 @@ export default function RootLayout({
             <main className="flex-1">
               {children}
               <Analytics />
+              <SpeedInsights />
             </main>
             <footer className="border-t">
               <div className="container flex items-center justify-center h-14">
