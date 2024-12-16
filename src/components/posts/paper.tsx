@@ -3,6 +3,7 @@
 import { Card } from "@/components/ui/card"
 import Image from "next/image"
 import { CustomMarkdown } from "./custom-markdown"
+import { ShareCard } from "./share-card"
 
 interface PaperProps {
     post: {
@@ -12,6 +13,7 @@ interface PaperProps {
         content: string
         coverImage?: string
         tags?: string[]
+        slug: string
     }
 }
 
@@ -20,6 +22,10 @@ const isExternalImage = (src: string) => {
 }
 
 export function Paper({ post }: PaperProps) {
+    const url = typeof window !== 'undefined'
+        ? window.location.href
+        : `https://zhuhai.fun/posts/${post.slug}`
+
     return (
         <Card className="p-6 max-w-4xl mx-auto">
             {post.coverImage && (
@@ -42,6 +48,8 @@ export function Paper({ post }: PaperProps) {
             <div className="prose prose-stone dark:prose-invert max-w-none [&_img]:rounded-lg [&_img]:w-full [&_img]:h-auto">
                 <CustomMarkdown>{post.content}</CustomMarkdown>
             </div>
+
+            <ShareCard title={post.title} url={url} />
         </Card>
     )
 } 
