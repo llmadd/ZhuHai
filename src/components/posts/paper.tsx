@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card"
 import Image from "next/image"
 import { CustomMarkdown } from "./custom-markdown"
 import { ShareCard } from "./share-card"
+import { useEffect, useState } from "react"
 
 interface PaperProps {
     post: {
@@ -22,9 +23,12 @@ const isExternalImage = (src: string) => {
 }
 
 export function Paper({ post }: PaperProps) {
-    const url = typeof window !== 'undefined'
-        ? window.location.href
-        : `https://zhuhai.fun/posts/${post.slug}`
+    const [url, setUrl] = useState(`https://zhuhai.fun/posts/${post.slug}`)
+
+    useEffect(() => {
+        // 在客户端更新 URL
+        setUrl(window.location.href)
+    }, [])
 
     return (
         <Card className="p-6 max-w-4xl mx-auto">
