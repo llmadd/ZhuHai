@@ -2,13 +2,17 @@ import { Metadata } from "next"
 import { siteConfig } from "@/config/site"
 import { getAllPosts, getCategories } from "@/lib/posts"
 import { PostList } from "@/components/index/post-list"
+import { i18n } from "@/config/i18n"
 
 export const metadata: Metadata = {
-    title: "博客文章",
-    description: "浏览所有文章，包括技术分享和生活感悟",
+    title: {
+        default: i18n.zh.category.title,
+        template: `%s | ${siteConfig.name}`
+    },
+    description: i18n.zh.category.description,
     openGraph: {
-        title: "博客文章 | " + siteConfig.name,
-        description: "浏览所有文章，包括技术分享和生活感悟",
+        title: `${i18n.zh.category.title} | ${siteConfig.name}`,
+        description: i18n.zh.category.description,
         url: `${siteConfig.url}/posts`,
     },
 }

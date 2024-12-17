@@ -1,17 +1,14 @@
-import { Paper } from "@/components/posts/paper"
-import { getPostBySlug } from "@/lib/posts"
-import { notFound } from "next/navigation"
-import { Suspense } from "react"
-import { PostHeader } from "@/components/posts/post-header"
-import { PostSidebar } from "@/components/posts/post-sidebar"
-import { getTableOfContents } from "@/lib/toc"
 import { Metadata } from "next"
+import { getPostBySlug } from "@/lib/posts"
+import { Paper } from "@/components/posts/paper"
+import { notFound } from "next/navigation"
 import { siteConfig } from "@/config/site"
 
+
 interface PostPageProps {
-    params: Promise<{
+    params: {
         slug: string
-    }>
+    }
 }
 
 export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
@@ -19,26 +16,22 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
     const post = await getPostBySlug(resolvedParams.slug, false)
     if (!post) return {}
 
-    const ogImage = post.coverImage || siteConfig.ogImage
     return {
-        title: post.title,
-        description: post.excerpt,
-        authors: [{ name: post.author }],
+        title: post.title.zh,
+        description: post.excerpt.zh,
         openGraph: {
-            title: post.title,
-            description: post.excerpt,
+            title: post.title.zh,
+            description: post.excerpt.zh,
             type: 'article',
-            url: `${siteConfig.url}/posts/${resolvedParams.slug}`,
-            images: [{ url: ogImage, width: 1200, height: 630, alt: post.title }],
-            publishedTime: post.date,
-            authors: [post.author],
-            tags: post.tags,
-        },
-        twitter: {
-            card: 'summary_large_image',
-            title: post.title,
-            description: post.excerpt,
-            images: [ogImage],
+            url: `${siteConfig.url}/posts/${post.slug}`,
+            images: post.coverImage ? [
+                {
+                    url: post.coverImage,
+                    width: 1200,
+                    height: 630,
+                    alt: post.coverImageAlt?.zh || post.title.zh,
+                }
+            ] : undefined,
         },
     }
 }
@@ -51,23 +44,5 @@ export default async function PostPage({ params }: PostPageProps) {
         notFound()
     }
 
-    const tableOfContents = await getTableOfContents(post.content)
-
-    return (
-        <>
-            <PostHeader />
-            <div className="container relative py-6 md:py-10">
-                <div className="flex flex-col lg:flex-row lg:gap-10">
-                    <div className="flex-1">
-                        <Suspense fallback={<div>加载中...</div>}>
-                            <Paper post={post} />
-                        </Suspense>
-                    </div>
-                    <div className="lg:w-64">
-                        <PostSidebar tableOfContents={tableOfContents} />
-                    </div>
-                </div>
-            </div>
-        </>
-    )
+    return <Paper post={post} />
 } 

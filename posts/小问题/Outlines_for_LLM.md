@@ -1,12 +1,18 @@
 ---
-title: "开源大模型结构化输出：输出与正则表达式匹配或遵循 JSON 架构"
+title: 
+    zh: '开源大模型结构化输出：输出与正则表达式匹配或遵循 JSON 架构'
+    en: 'Outlines for LLM: Outputting with JSON Schema or Matching Regular Expressions'
 date: "2024-12-13"
 author: "Hai"
 coverImage: 'https://raw.githubusercontent.com/dottxt-ai/outlines/main/docs/assets/images/logo.png'
+coverImageAlt:
+    zh: 'outlines项目logo'
+    en: 'outlines project logo'
 tags: ['outlines', '开源大模型', '大模型JSON格式输出']
 status: 'published'
----
+--- 
 
+<!-- Chinese Content -->
 # 开源大模型结构化输出：输出与正则表达式匹配或遵循 JSON 架构
 
 结构化输出是现在AI应用中核心用例，一般大家在使用一些成熟的大模型接口时都可以通过参数去控制格式化输出Json，比如OpenAI接口中的`response_format`参数。
@@ -135,4 +141,6 @@ guided_decoding_backend: Optional[str] = Field(
 )
 ```
 
+<!-- English Content -->
+Content in production......
 

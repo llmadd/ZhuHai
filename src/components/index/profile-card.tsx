@@ -1,3 +1,5 @@
+'use client'
+
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { Github, Twitter, MessageCircle } from "lucide-react"
@@ -9,8 +11,13 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { useLocale } from "@/contexts/locale-context"
+import { i18n } from "@/config/i18n"
 
 export function ProfileCard() {
+    const { locale } = useLocale()
+    const t = i18n[locale]
+
     return (
         <section className="min-h-[calc(100vh-80px)] flex items-center justify-center">
             <div className="text-center">
@@ -23,17 +30,15 @@ export function ProfileCard() {
                         priority
                     />
                 </div>
-                <h1 className="text-4xl font-bold mb-4">Hai</h1>
+                <h1 className="text-4xl font-bold mb-4">{t.profile.name}</h1>
                 <p className="text-xl text-muted-foreground mb-4 max-w-2xl mx-auto flex items-center justify-center gap-2">
-                    <span>📍 上海</span>
+                    <span>{t.profile.location}</span>
                     <span>·</span>
-                    <span>✉️ zh@useai.cn</span>
+                    <span>{t.profile.email}</span>
                 </p>
-                <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-                    目前从事大模型算法工程师，会写一些自己遇到的问题和解决方案。<br />
-                    ps:对不起，我的文章AI成分很浓，阅读请谨慎！（自己写文章太累啦）<br />
-                    菜鸟闯天涯，欢迎交流！
-                </p>
+                <div className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto whitespace-pre-line">
+                    {t.profile.description}
+                </div>
                 <div className="flex items-center justify-center gap-4 mb-8">
                     <TooltipProvider>
                         <Tooltip>
@@ -63,7 +68,7 @@ export function ProfileCard() {
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <Dialog>
-                                    <DialogTitle className="sr-only">微信二维码</DialogTitle>
+                                    <DialogTitle className="sr-only">{t.profile.wechatQRCode}</DialogTitle>
                                     <DialogTrigger asChild>
                                         <Button variant="outline" size="icon">
                                             <MessageCircle className="h-5 w-5" />
@@ -73,7 +78,7 @@ export function ProfileCard() {
                                         <div className="relative w-full h-[300px]">
                                             <Image
                                                 src="/wechat.jpg"
-                                                alt="微信二维码"
+                                                alt={t.profile.wechatQRCode}
                                                 fill
                                                 className="object-contain"
                                             />
@@ -82,13 +87,13 @@ export function ProfileCard() {
                                 </Dialog>
                             </TooltipTrigger>
                             <TooltipContent>
-                                <p>微信</p>
+                                <p>{t.profile.wechat}</p>
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
                 </div>
                 <Button size="lg" asChild>
-                    <Link href="/posts">查看博客</Link>
+                    <Link href="/posts">{t.profile.viewBlog}</Link>
                 </Button>
             </div>
         </section>

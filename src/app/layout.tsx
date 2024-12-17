@@ -8,6 +8,7 @@ import { siteConfig } from "@/config/site"
 import Link from "next/link"
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { LocaleProvider } from "@/contexts/locale-context"
 
 export const fontSans = FontSans({
   subsets: ["latin"],
@@ -73,38 +74,40 @@ export default function RootLayout({
   return (
     <html lang="zh" suppressHydrationWarning>
       <body className={cn("min-h-screen bg-background antialiased", fontSans.variable)}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <div className="relative flex min-h-screen flex-col">
-            <NavigationMenu className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60" />
-            <main className="flex-1">
-              {children}
-              <Analytics />
-              <SpeedInsights />
-            </main>
-            <footer className="border-t">
-              <div className="container flex items-center justify-center h-14">
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  <span>友情链接:</span>
-                  <Link
-                    href="https://useai.cn"
-                    target="_blank"
-                    className="hover:text-primary transition-colors"
-                  >
-                    UseAI
-                  </Link>
-                  <span>•</span>
-                  <Link
-                    href="https://beian.miit.gov.cn/"
-                    target="_blank"
-                    className="hover:text-primary transition-colors"
-                  >
-                    豫ICP备2022008800号-1
-                  </Link>
+        <LocaleProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <div className="relative flex min-h-screen flex-col">
+              <NavigationMenu className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60" />
+              <main className="flex-1">
+                {children}
+                <Analytics />
+                <SpeedInsights />
+              </main>
+              <footer className="border-t">
+                <div className="container flex items-center justify-center h-14">
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <span>友情链接:</span>
+                    <Link
+                      href="https://useai.cn"
+                      target="_blank"
+                      className="hover:text-primary transition-colors"
+                    >
+                      UseAI
+                    </Link>
+                    <span>•</span>
+                    <Link
+                      href="https://beian.miit.gov.cn/"
+                      target="_blank"
+                      className="hover:text-primary transition-colors"
+                    >
+                      豫ICP备2022008800号-1
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            </footer>
-          </div>
-        </ThemeProvider>
+              </footer>
+            </div>
+          </ThemeProvider>
+        </LocaleProvider>
       </body>
     </html>
   )

@@ -1,8 +1,12 @@
+'use client'
+
 import { Card } from "@/components/ui/card"
 import { Calendar, Folder, Tag, User } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { format } from "date-fns"
+import { useLocale } from "@/contexts/locale-context"
+import { i18n } from "@/config/i18n"
 
 // 判断是否为外部链接
 const isExternalImage = (src: string) => {
@@ -12,18 +16,27 @@ const isExternalImage = (src: string) => {
 interface PostCardProps {
     post: {
         slug: string
-        title: string
+        title: {
+            zh: string
+            en: string
+        }
         date: string
+        author: string
         category: string
-        excerpt: string
+        excerpt: {
+            zh: string
+            en: string
+        }
         coverImage?: string
-        author?: string
         tags?: string[]
         status: 'published' | 'draft'
     }
 }
 
 export function PostCard({ post }: PostCardProps) {
+    const { locale } = useLocale()
+    const t = i18n[locale]
+
     return (
         <Card className="mb-6">
             <div className="flex flex-col md:flex-row gap-6 p-4 md:p-6">
@@ -32,11 +45,11 @@ export function PostCard({ post }: PostCardProps) {
                         href={`/posts/${post.slug}`}
                         className="text-xl md:text-2xl font-bold hover:text-primary mb-3"
                     >
-                        {post.title}
+                        {post.title[locale]}
                     </Link>
 
                     <p className="text-muted-foreground mb-4 flex-1 line-clamp-2 md:line-clamp-3">
-                        {post.excerpt}
+                        {post.excerpt[locale]}
                     </p>
 
                     <div className="flex flex-wrap items-center gap-3 md:gap-4 text-sm text-muted-foreground">
@@ -48,7 +61,7 @@ export function PostCard({ post }: PostCardProps) {
                         )}
                         <div className="flex items-center gap-1">
                             <Calendar className="w-4 h-4" />
-                            <span>{format(new Date(post.date), 'yyyy年MM月dd日')}</span>
+                            <span>{format(new Date(post.date), locale === 'zh' ? 'yyyy年MM月dd日' : 'MMM dd, yyyy')}</span>
                         </div>
                         <div className="flex items-center gap-1">
                             <Folder className="w-4 h-4" />
@@ -75,13 +88,11 @@ export function PostCard({ post }: PostCardProps) {
                         <div className="relative w-full aspect-[4/3] overflow-hidden rounded-lg">
                             <Image
                                 src={post.coverImage}
-                                alt={post.title}
+                                alt={post.title[locale]}
                                 fill
                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                 className="object-contain"
-                                {...(isExternalImage(post.coverImage) ? {
-                                    unoptimized: true,
-                                } : {})}
+                                unoptimized
                             />
                         </div>
                     </div>

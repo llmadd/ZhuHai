@@ -1,11 +1,13 @@
 'use client'
 
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { useState } from "react"
 import { Search } from "lucide-react"
-import { useRouter } from "next/navigation"
-import { Button } from "../ui/button"
+import { useEffect, useState } from "react"
+import { useDebounce } from "@/hooks/useDebounce"
+import Link from "next/link"
+import { useLocale } from "@/contexts/locale-context"
+import { i18n } from "@/config/i18n"
 
 interface SearchResult {
     title: string
@@ -15,69 +17,79 @@ interface SearchResult {
 
 export function SearchDialog() {
     const [open, setOpen] = useState(false)
+    const [query, setQuery] = useState("")
+    const debouncedQuery = useDebounce(query, 300)
     const [results, setResults] = useState<SearchResult[]>([])
-    const [loading, setLoading] = useState(false)
-    const router = useRouter()
+    const [isSearching, setIsSearching] = useState(false)
+    const { locale } = useLocale()
+    const t = i18n[locale]
 
-    async function onSearch(query: string) {
-        if (query.length < 2) {
+    useEffect(() => {
+        if (debouncedQuery.length > 0) {
+            setIsSearching(true)
+            fetch(`/api/search?q=${encodeURIComponent(debouncedQuery)}&locale=${locale}`)
+                .then(res => res.json())
+                .then(data => {
+                    setResults(data)
+                    setIsSearching(false)
+                })
+        } else {
             setResults([])
-            return
         }
-
-        setLoading(true)
-        try {
-            const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`)
-            const data = await res.json()
-            setResults(data)
-        } catch (error) {
-            console.error('Search failed:', error)
-        } finally {
-            setLoading(false)
-        }
-    }
-
-    function onSelect(result: SearchResult) {
-        setOpen(false)
-        router.push(`/posts/${result.slug}`)
-    }
+    }, [debouncedQuery, locale])
 
     return (
         <>
-            <Button
-                variant="outline"
-                size="icon"
-                className="hidden sm:flex"
+            <button
                 onClick={() => setOpen(true)}
+                className="flex items-center gap-2 px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
-                <Search className="h-4 w-4" />
-            </Button>
+                <Search className="w-4 h-4" />
+                <span>{t.search.placeholder}</span>
+                <kbd className="hidden md:inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100">
+                    <span className="text-xs">⌘</span>K
+                </kbd>
+            </button>
+
             <Dialog open={open} onOpenChange={setOpen}>
-                <DialogContent className="sm:max-w-[425px]">
-                    <DialogTitle>搜索文章</DialogTitle>
-                    <DialogDescription className="sr-only">
-                        在文章标题和内容中搜索
-                    </DialogDescription>
-                    <div className="space-y-4">
+
+                <DialogContent className="gap-0 p-0 outline-none">
+                    <DialogTitle className="sr-only">{t.search.placeholder}</DialogTitle>
+                    <div className="flex items-center border-b px-3">
+                        <Search className="w-4 h-4 mr-2 shrink-0 opacity-50" />
                         <Input
-                            placeholder="搜索文章..."
-                            onChange={(e) => onSearch(e.target.value)}
+                            className="h-12 border-0 focus-visible:ring-0"
+                            placeholder={t.search.placeholder}
+                            value={query}
+                            onChange={(e) => setQuery(e.target.value)}
                         />
-                        <div className="space-y-2">
-                            {loading && <div className="text-center">搜索中...</div>}
-                            {results.map((result) => (
-                                <div
-                                    key={result.slug}
-                                    className="p-4 cursor-pointer hover:bg-muted rounded-lg"
-                                    onClick={() => onSelect(result)}
-                                >
-                                    <h3 className="font-medium mb-1">{result.title}</h3>
-                                    <p className="text-sm text-muted-foreground line-clamp-2">
-                                        {result.excerpt}
-                                    </p>
-                                </div>
-                            ))}
-                        </div>
+                    </div>
+                    <div className="max-h-[50vh] overflow-y-auto p-0">
+                        {isSearching ? (
+                            <p className="p-4 text-sm text-muted-foreground">
+                                {t.search.searching}
+                            </p>
+                        ) : results.length > 0 ? (
+                            <div className="grid gap-4 p-4">
+                                {results.map((result) => (
+                                    <Link
+                                        key={result.slug}
+                                        href={`/posts/${result.slug}`}
+                                        onClick={() => setOpen(false)}
+                                        className="space-y-1 rounded-lg border p-4 hover:bg-accent"
+                                    >
+                                        <h3 className="font-medium">{result.title}</h3>
+                                        <p className="text-sm text-muted-foreground line-clamp-2">
+                                            {result.excerpt}
+                                        </p>
+                                    </Link>
+                                ))}
+                            </div>
+                        ) : query.length > 0 ? (
+                            <p className="p-4 text-sm text-muted-foreground">
+                                {t.search.noResults}
+                            </p>
+                        ) : null}
                     </div>
                 </DialogContent>
             </Dialog>

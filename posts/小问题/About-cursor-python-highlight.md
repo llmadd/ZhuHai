@@ -1,21 +1,24 @@
 ---
-title: '关于Cursor中Python代码的高亮问题'
+title: 
+    zh: '关于Cursor中Python代码的高亮问题'
+    en: 'About Python Code Highlighting in Cursor'
 date: '2024-12-05'
 author: 'Hai'
 coverImage: 'https://global.discourse-cdn.com/flex020/uploads/cursor1/optimized/2X/0/045bbffe7a10c30d5b883b0a16862a446cb65c2f_2_1035x456.png'
+coverImageAlt:
+    zh: 'Cursor编辑器界面截图'
+    en: 'Cursor Editor Interface Screenshot'
 tags: ['cursor', 'python', 'highlighting']
 status: 'published'
 ---
 
-
+<!-- Chinese Content -->
 
 # 关于Cursor中Python代码的高亮问题
 
 Cursor是一款AI驱动的代码编辑器，支持多种编程语言，包括Python。为了更好地在Cursor中使用Python，我们可以通过修改配置来使用微软的扩展市场，并安装相关Python扩展以实现代码高亮等功能。
 
-![Cursor默认显示python代码样式](https://global.discourse-cdn.com/flex020/uploads/cursor1/optimized/2X/0/045bbffe7a10c30d5b883b0a16862a446cb65c2f_2_1035x456.png)
-*Cursor默认显示python代码样式*
-
+![Cursor编辑器界面](https://global.discourse-cdn.com/flex020/uploads/cursor1/optimized/2X/0/045bbffe7a10c30d5b883b0a16862a446cb65c2f_2_1035x456.png "Cursor默认显示python代码样式")
 
 以下是详细的设置步骤：
 
@@ -80,3 +83,7 @@ Cursor是一款AI驱动的代码编辑器，支持多种编程语言，包括Pyt
 
 ---
 参考链接：[GitHub Gist](https://gist.github.com/joeblackwaslike/752b26ce92e3699084e1ecfc790f74b2#file-readme-md)
+
+<!-- English Content -->
+Content in production......
+

@@ -1,12 +1,18 @@
 ---
-title: '关于Google、GitHub的三方登录'
+title: 
+    zh: '关于Google、GitHub的三方登录'
+    en: 'About Google, GitHub OAuth 2.0'
 date: '2024-12-10'
 author: 'Hai'
 coverImage: 'https://oauth.net/images/oauth-logo.svg'
+coverImageAlt:
+    zh: 'OAuth 2.0 协议图标'
+    en: 'OAuth 2.0 Protocol Icon'
 tags: ['OAUTH2.0', 'python', 'Google', 'Github']
 status: 'published'
 ---
 
+<!-- Chinese Content -->
 # 关于Google、GitHub的三方登录
 
 OAuth 2.0 是一种授权协议，它允许应用程序安全地获取对其他应用程序或服务的有限访问权限。通俗地说，OAuth 2.0 就像是你去酒店的时候使用自己的信用卡来获取房间钥匙卡。
@@ -283,3 +289,7 @@ oauth_handler = OAuthHandler()
 
 
 ps: GitHub本地调试中设置的URL仍然可能会因为非https而报错,可以使用使用[ngrok](https://ngrok.com/)进行调试,将本地服务映射到公网,然后使用公网地址进行调试。
+
+<!-- English Content -->
+
+Content in production ...

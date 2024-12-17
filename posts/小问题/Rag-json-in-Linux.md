@@ -1,12 +1,18 @@
 ---
-title: 'RAG中大模型的幻觉有可能是Json字符编码的问题'
+title: 
+    zh: 'RAG中大模型的幻觉有可能是Json字符编码的问题'
+    en: 'The hallucination of large models in RAG may be due to the problem of JSON character encoding'
 date: '2024-12-05'
 author: 'Hai'
 coverImage: '/paper.png'
+coverImageAlt:
+    zh: 'RAG中大模型的幻觉有可能是Json字符编码的问题'
+    en: 'The hallucination of large models in RAG may be due to the problem of JSON character encoding'
 tags: ['RAG', 'json', 'Linux']
 status: 'published'
 ---
 
+<!-- Chinese Content -->
 # RAG中大模型的幻觉有可能是Json字符编码的问题
 
 今天遇到一个很有趣的事情，在基于RAG做一个Excel绘制图片的工具，我在Windows上测试的时候，发现绘制出来的图片是正常的，但是到了Linux上，绘制出来的图片就出现了问题,经常出现一些错误的地区，我最初以为是模型幻觉引起的，在DeBug后发现将excel使用pandas读取后，再转换为json，在format给prompt时字符转义为ASCII编码，从而导致了图片中很多中文地区被模型错误输出。
@@ -87,4 +93,8 @@ def read_excel_with_encoding(file_path):
 ```
 
 这个也证明了，大模型问答中使用中文字符是比使用ASCII编码有更好的效果。
+
+<!-- English Content -->
+Content in production......
+
 

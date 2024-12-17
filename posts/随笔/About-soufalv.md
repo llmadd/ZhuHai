@@ -1,12 +1,18 @@
 ---
-title: 法律AI搜索引擎 - 搜法律
+title: 
+    zh: '法律AI搜索引擎 - 搜法律'
+    en: 'Legal AI Search Engine - Soufalv'
 date: '2024-12-06'
 author: 'Hai'
 coverImage: 'https://cdn-fusion.imgcdn.store/i/2024/1dcfb6355594d10b.png'
+coverImageAlt:
+    zh: '搜法律产品截图'
+    en: 'Soufalv Product Screenshot'
 tags: ['AI搜索', '法律AI搜索引擎', '法律']
 status: 'published'
 ---
 
+<!-- Chinese Content -->
 # 法律AI搜索引擎 - 搜法律
 
 ## 为什么做
@@ -62,3 +68,6 @@ status: 'published'
 
 有兴趣的朋友可以体验一下：
 [搜法律](https://soufalv.com/)
+
+<!-- English Content -->
+Content in production......

@@ -3,26 +3,46 @@
 import { PostCard } from "./post-card"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
+import { useLocale } from "@/contexts/locale-context"
+import { i18n } from "@/config/i18n"
+
+interface Post {
+    slug: string
+    title: {
+        zh: string
+        en: string
+    }
+    date: string
+    author: string
+    category: string
+    excerpt: {
+        zh: string
+        en: string
+    }
+    coverImage?: string
+    tags?: string[]
+    status: 'published' | 'draft'
+}
+
+interface Category {
+    name: {
+        zh: string
+        en: string
+    }
+    key: string
+}
 
 interface PostListProps {
-    posts: Array<{
-        slug: string
-        title: string
-        date: string
-        category: string
-        excerpt: string
-        coverImage?: string
-        author?: string
-        tags?: string[]
-        status: 'published' | 'draft'
-    }>
-    categories: string[]
+    posts: Post[]
+    categories: Category[]
 }
 
 export function PostList({ posts, categories }: PostListProps) {
-    const [selectedCategory, setSelectedCategory] = useState<string>('全部')
+    const { locale } = useLocale()
+    const t = i18n[locale]
+    const [selectedCategory, setSelectedCategory] = useState<string>('all')
 
-    const filteredPosts = selectedCategory === '全部'
+    const filteredPosts = selectedCategory === 'all'
         ? posts
         : posts.filter(post => post.category === selectedCategory)
 
@@ -31,28 +51,30 @@ export function PostList({ posts, categories }: PostListProps) {
             <div className="mb-8 md:mb-12">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
                     <div>
-                        <h1 className="text-3xl md:text-4xl font-bold mb-4">博客文章</h1>
+                        <h1 className="text-3xl md:text-4xl font-bold mb-4">
+                            {t.category.title}
+                        </h1>
                         <p className="text-muted-foreground text-lg">
-                            分享技术文章和生活感悟
+                            {t.category.description}
                         </p>
                     </div>
                     <div className="flex flex-wrap gap-2">
                         <Button
-                            key="全部"
-                            variant={selectedCategory === '全部' ? 'default' : 'outline'}
+                            key="all"
+                            variant={selectedCategory === 'all' ? 'default' : 'outline'}
                             className="px-4"
-                            onClick={() => setSelectedCategory('全部')}
+                            onClick={() => setSelectedCategory('all')}
                         >
-                            全部
+                            {t.category.allCategories}
                         </Button>
                         {categories.map((category) => (
                             <Button
-                                key={category}
-                                variant={selectedCategory === category ? 'default' : 'outline'}
+                                key={category.key}
+                                variant={selectedCategory === category.key ? 'default' : 'outline'}
                                 className="px-4"
-                                onClick={() => setSelectedCategory(category)}
+                                onClick={() => setSelectedCategory(category.key)}
                             >
-                                {category}
+                                {category.name[locale]}
                             </Button>
                         ))}
                     </div>
@@ -67,7 +89,7 @@ export function PostList({ posts, categories }: PostListProps) {
 
             {filteredPosts.length === 0 && (
                 <div className="text-center text-muted-foreground py-12">
-                    该分类下暂无文章
+                    {t.category.noPostsInCategory}
                 </div>
             )}
         </section>

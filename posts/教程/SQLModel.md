@@ -1,12 +1,18 @@
 ---
-title: 'SQLModel 教程'
+title: 
+    zh: 'SQLModel 教程'
+    en: 'SQLModel Tutorial'
 date: '2024-12-06'
 author: 'Hai'
 coverImage: 'https://sqlmodel.tiangolo.com/img/logo-margin/logo-margin-vector.svg#only-light'
+coverImageAlt:
+    zh: 'SQLModel 图标'
+    en: 'SQLModel Icon'
 tags: ['SQLModel', 'python', 'ORM']
 status: 'published'
 ---
 
+<!-- Chinese Content -->
 
 # SQLModel 介绍
 
@@ -751,3 +757,8 @@ with Session(engine) as session:
 # 参考资料
 
 - [SQLModel 官方文档](https://sqlmodel.tiangolo.com)
+
+<!-- English Content -->
+
+Content in production......
+

@@ -5,6 +5,8 @@ import { QRCodeSVG } from 'qrcode.react'
 import { Share2, Download } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import * as htmlToImage from 'html-to-image'
+import { useLocale } from "@/contexts/locale-context"
+import { i18n } from "@/config/i18n"
 
 interface ShareCardProps {
     title: string
@@ -14,6 +16,9 @@ interface ShareCardProps {
 export function ShareCard({ title, url }: ShareCardProps) {
     const [isGenerating, setIsGenerating] = useState(false)
     const cardRef = useRef<HTMLDivElement>(null)
+
+    const { locale } = useLocale()
+    const t = i18n[locale]
 
     const generateImage = async () => {
         if (!cardRef.current) return
@@ -34,7 +39,7 @@ export function ShareCard({ title, url }: ShareCardProps) {
         <div className="mt-8">
             <div className="flex items-center gap-2 mb-4">
                 <Share2 className="w-5 h-5" />
-                <span className="font-medium">分享文章</span>
+                <span className="font-medium">{t.post.share}</span>
             </div>
 
             <div
@@ -44,7 +49,7 @@ export function ShareCard({ title, url }: ShareCardProps) {
                 <h2 className="text-xl font-bold mb-4">{title}</h2>
                 <div className="flex items-center justify-between">
                     <div className="text-sm text-muted-foreground">
-                        <p>扫描二维码查看文章</p>
+                        <p>{t.post.scanQRCode}</p>
                         <p className="mt-1">ZhuHai.Fun</p>
                     </div>
                     <QRCodeSVG
@@ -62,7 +67,7 @@ export function ShareCard({ title, url }: ShareCardProps) {
                 disabled={isGenerating}
             >
                 <Download className="w-4 h-4 mr-2" />
-                {isGenerating ? '生成中...' : '下载分享图'}
+                {isGenerating ? t.post.generating : t.post.downloadShareImage}
             </Button>
         </div>
     )

@@ -2,12 +2,16 @@
 
 import { cn } from "@/lib/utils"
 import { useEffect, useState } from "react"
+import { useLocale } from "@/contexts/locale-context"
+import { i18n } from "@/config/i18n"
 
 interface PostSidebarProps {
     tableOfContents: { id: string; text: string; level: number }[]
 }
 
 export function PostSidebar({ tableOfContents }: PostSidebarProps) {
+    const { locale } = useLocale()
+    const t = i18n[locale]
     const [activeId, setActiveId] = useState<string>("")
 
     useEffect(() => {
@@ -32,7 +36,7 @@ export function PostSidebar({ tableOfContents }: PostSidebarProps) {
         <div className="hidden lg:block">
             <div className="lg:fixed lg:top-[calc(64px+5rem)] lg:right-[max(2rem,calc(50%-45rem))] w-64 overflow-auto max-h-[calc(100vh-10rem)]">
                 <div className="space-y-2 pb-8">
-                    <p className="font-medium">目录</p>
+                    <p className="font-medium">{t.post.tableOfContents}</p>
                     <div className="space-y-1">
                         {tableOfContents.map(({ id, text, level }) => (
                             <a
