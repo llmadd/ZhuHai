@@ -4,7 +4,6 @@ import { Paper } from "@/components/posts/paper"
 import { notFound } from "next/navigation"
 import { siteConfig } from "@/config/site"
 
-
 interface PostPageProps {
     params: {
         slug: string
@@ -12,8 +11,7 @@ interface PostPageProps {
 }
 
 export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
-    const resolvedParams = await params
-    const post = await getPostBySlug(resolvedParams.slug, false)
+    const post = await getPostBySlug(params.slug, false)
     if (!post) return {}
 
     return {
@@ -37,8 +35,7 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
 }
 
 export default async function PostPage({ params }: PostPageProps) {
-    const resolvedParams = await params
-    const post = await getPostBySlug(resolvedParams.slug, false)
+    const post = await getPostBySlug(params.slug, false)
 
     if (!post) {
         notFound()
