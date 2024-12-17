@@ -1,17 +1,25 @@
-import { Metadata } from "next"
+import type { Metadata } from "next"
 import { getPostBySlug } from "@/lib/posts"
 import { Paper } from "@/components/posts/paper"
 import { notFound } from "next/navigation"
 import { siteConfig } from "@/config/site"
 
-interface PostPageProps {
-    params: {
-        slug: string
-    }
+// 定义参数类型
+type PageParams = {
+    slug: string
 }
 
-export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
-    const post = await getPostBySlug(params.slug, false)
+// 定义 Props 类型
+type Props = {
+    params: Promise<PageParams>
+    searchParams?: { [key: string]: string | string[] | undefined }
+}
+
+export async function generateMetadata(
+    props: Props
+): Promise<Metadata> {
+    const { slug } = await props.params
+    const post = await getPostBySlug(slug, false)
     if (!post) return {}
 
     return {
@@ -21,7 +29,7 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
             title: post.title.zh,
             description: post.excerpt.zh,
             type: 'article',
-            url: `${siteConfig.url}/posts/${post.slug}`,
+            url: `${siteConfig.url}/posts/${slug}`,
             images: post.coverImage ? [
                 {
                     url: post.coverImage,
@@ -34,12 +42,15 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
     }
 }
 
-export default async function PostPage({ params }: PostPageProps) {
-    const post = await getPostBySlug(params.slug, false)
-
-    if (!post) {
-        notFound()
-    }
+export default async function Page(props: Props) {
+    const { slug } = await props.params
+    const post = await getPostBySlug(slug, false)
+    if (!post) notFound()
 
     return <Paper post={post} />
+}
+
+// 生成静态参数
+export async function generateStaticParams(): Promise<PageParams[]> {
+    return []
 } 
