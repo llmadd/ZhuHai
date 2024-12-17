@@ -8,6 +8,7 @@ import { Languages } from "lucide-react"
 import { useLocale } from "@/contexts/locale-context"
 import { i18n } from "@/config/i18n"
 import { SearchDialog } from "./search-dialog"
+import { ThemeToggle } from "./theme-toggle"
 
 export function NavigationMenu({ className }: { className?: string }) {
     const pathname = usePathname()
@@ -60,6 +61,7 @@ export function NavigationMenu({ className }: { className?: string }) {
                         <Languages className="w-4 h-4 mr-2" />
                         {locale === 'zh' ? 'English' : '中文'}
                     </Button>
+                    <ThemeToggle />
                 </nav>
             </div>
         </header>
