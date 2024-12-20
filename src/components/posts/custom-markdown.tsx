@@ -12,7 +12,7 @@ interface CustomMarkdownProps {
     children: string
 }
 
-export const CustomMarkdown: FC<CustomMarkdownProps> = memo(({ children }) => {
+const CustomMarkdownComponent: FC<CustomMarkdownProps> = ({ children }) => {
     const { locale } = useLocale()
 
     const createHeading = (level: 1 | 2 | 3 | 4 | 5 | 6) => {
@@ -53,6 +53,8 @@ export const CustomMarkdown: FC<CustomMarkdownProps> = memo(({ children }) => {
             {children}
         </ReactMarkdown>
     )
-})
+}
 
-CustomMarkdown.displayName = 'CustomMarkdown' 
+CustomMarkdownComponent.displayName = 'CustomMarkdown'
+
+export const CustomMarkdown = memo(CustomMarkdownComponent) 
