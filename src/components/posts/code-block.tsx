@@ -1,10 +1,10 @@
 'use client'
 
-import { FC, ReactNode, useState, useRef } from 'react'
+import { FC, useState, useRef } from 'react'
 import { Check, Copy } from 'lucide-react'
 
 interface CodeBlockProps {
-    children: ReactNode
+    children: string
     className?: string
 }
 
@@ -14,8 +14,7 @@ export const CodeBlock: FC<CodeBlockProps> = ({ children, className }) => {
 
     const onCopy = async () => {
         try {
-            const text = preRef.current?.textContent || ''
-            await navigator.clipboard.writeText(text)
+            await navigator.clipboard.writeText(children)
             setCopied(true)
             setTimeout(() => setCopied(false), 2000)
         } catch (err) {
