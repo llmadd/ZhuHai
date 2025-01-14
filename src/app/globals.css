@@ -65,6 +65,14 @@ body {
   .container {
     @apply mx-auto px-4 max-w-7xl;
   }
+
+  .prose img {
+    @apply rounded-lg;
+    @apply mx-auto;
+    @apply shadow-md;
+    @apply max-h-[500px];
+    @apply object-contain;
+  }
 }
 
 @layer base {

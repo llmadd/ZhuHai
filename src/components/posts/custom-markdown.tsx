@@ -64,7 +64,19 @@ function CustomMarkdownComponent({ children }: CustomMarkdownProps) {
         h4: createHeading(4),
         h5: createHeading(5),
         h6: createHeading(6),
-        img: () => null
+        img: ({ src, alt, ...props }) => {
+            if (!src) return null
+
+            return (
+                <img
+                    src={src}
+                    alt={alt || ''}
+                    className="max-w-full h-auto rounded-lg my-4"
+                    loading="lazy"
+                    {...props}
+                />
+            )
+        },
     }
 
     return (
