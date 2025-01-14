@@ -85,15 +85,16 @@ AI正在以惊人的速度改变世界，从艺术创作到商业应用，再到
   - 介绍 OpenAI API 的基本使用方法。
   - 示例代码：调用 GPT 模型生成文本。
     ```python
-    import openai
+    from openai import OpenAI
 
-    openai.api_key = "your-api-key"
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt="写一段关于人工智能的简短介绍：",
-        max_tokens=100
+    client = OpenAI(base_url=r"http://180.153.21.76:17009/v1", api_key="111")
+    response = client.chat.completions.create(
+        model = "Qwen-72B",
+        messages=[
+          {"role": "user", "content": "写一段关于人工智能的简短介绍："}
+        ]
     )
-    print(response.choices[0].text.strip())
+    print(response.choices[0].message.content)
     ```
 
 ---
@@ -118,25 +119,40 @@ AI正在以惊人的速度改变世界，从艺术创作到商业应用，再到
     ```
   - 示例代码：使用 LangChain 实现 RAG：
     ```python
-    from langchain.chains import RetrievalQA
-    from langchain.document_loaders import TextLoader
-    from langchain.embeddings import OpenAIEmbeddings
-    from langchain.vectorstores import FAISS
-    from langchain.llms import OpenAI
+    from langchain_text_splitters import CharacterTextSplitter
+    from langchain_openai import OpenAIEmbeddings
+    from langchain_community.document_loaders import Docx2txtLoader
+    from langchain_chroma import Chroma
+    from langchain_openai import ChatOpenAI
 
     # 加载文档
-    loader = TextLoader("example.txt")
-    documents = loader.load()
+    loader = Docx2txtLoader("人工智能.docx")
+
+    data = loader.load()
+
+    # 内容切割
+    text_splitter = CharacterTextSplitter(
+      separator="\n\n",
+      chunk_size=100,
+      chunk_overlap=20,
+      length_function=len,
+      is_separator_regex=False,
+  )
+
+    texts = text_splitter.split_documents(data)
 
     # 创建向量数据库
-    embeddings = OpenAIEmbeddings()
-    db = FAISS.from_documents(documents, embeddings)
+    embeddings = OpenAIEmbeddings(api_key="xxx", 
+                    base_url="http://180.153.21.76:12118/v1",
+                    model="ODB",
+                    )
+    db = Chroma(client=persistent_client, collection_name="xxx", embedding_function=embeddings)
 
     # 创建检索器
     retriever = db.as_retriever()
 
     # 创建 LLM
-    llm = OpenAI(model="text-davinci-003")
+    llm = ChatOpenAI(base_url=r"http://104.215.28.223:8080/v1", api_key="111", model="Qwen2.5-72B")
 
     # 创建 RAG 链
     qa_chain = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever)
@@ -315,6 +331,177 @@ AI Agent 正在快速发展，未来可能会在以下方面取得突破：
   - **伦理问题**：如何确保 AI Agent 的行为符合道德规范，避免滥用或误用。
   - **社会影响**：AI Agent 的普及可能对就业、隐私和社会结构产生深远影响。
 
+
+
+### 五、 大模型的部署
+
+huggingface 的模型部署
+
+```python
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+model_name = "Qwen/Qwen2.5-72B-Instruct"
+
+model = AutoModelForCausalLM.from_pretrained(
+    model_name,
+    torch_dtype="auto",
+    device_map="auto"
+)
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+prompt = "Give me a short introduction to large language model."
+messages = [
+    {"role": "system", "content": "You are Qwen, created by Alibaba Cloud. You are a helpful assistant."},
+    {"role": "user", "content": prompt}
+]
+text = tokenizer.apply_chat_template(
+    messages,
+    tokenize=False,
+    add_generation_prompt=True
+)
+model_inputs = tokenizer([text], return_tensors="pt").to(model.device)
+
+generated_ids = model.generate(
+    **model_inputs,
+    max_new_tokens=512
+)
+generated_ids = [
+    output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
+]
+
+response = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
+
+```
+
+Qwen2.5-72B-Instruct模型config.json配置
+
+```
+{
+  "architectures": [
+    "Qwen2ForCausalLM"  // 模型架构，用于因果语言建模
+  ],
+  "attention_dropout": 0.0,  // 注意力机制中的dropout率，0.0表示不使用dropout
+  "bos_token_id": 151643,  // 开始符（Beginning of Sequence）的token ID
+  "eos_token_id": 151645,  // 结束符（End of Sequence）的token ID
+  "hidden_act": "silu",  // 隐藏层激活函数，这里使用SILU（Swish）激活函数
+  "hidden_size": 8192,  // 隐藏层的大小，即每个隐藏层的神经元数量
+  "initializer_range": 0.02,  // 参数初始化的范围
+  "intermediate_size": 29568,  // 中间层的大小，通常用于Transformer中的前馈网络
+  "max_position_embeddings": 32768,  // 最大位置编码的长度，即模型能处理的最大序列长度
+  "max_window_layers": 70,  // 最大窗口层数，可能用于滑动窗口注意力机制
+  "model_type": "qwen2",  // 模型类型，标识为qwen2
+  "num_attention_heads": 64,  // 注意力头的数量
+  "num_hidden_layers": 80,  // 隐藏层的数量
+  "num_key_value_heads": 8,  // 键值头的数量，用于多头注意力机制
+  "rms_norm_eps": 1e-06,  // RMS归一化中的epsilon值，用于数值稳定性
+  "rope_theta": 1000000.0,  // RoPE（Rotary Position Embedding）的theta参数
+  "sliding_window": 131072,  // 滑动窗口的大小，可能用于限制注意力机制的范围
+  "tie_word_embeddings": false,  // 是否绑定输入和输出的词嵌入，false表示不绑定
+  "torch_dtype": "bfloat16",  // PyTorch数据类型，这里使用bfloat16
+  "transformers_version": "4.43.1",  // 使用的transformers库版本
+  "use_cache": true,  // 是否使用缓存，true表示使用
+  "use_sliding_window": false,  // 是否使用滑动窗口注意力机制，false表示不使用
+  "vocab_size": 152064  // 词汇表的类型数量，模型的词汇表中有 152,064 个不同的 token（可能是单词、子词或字符等）
+}
+```
+
+Qwen2.5-72B-Instruct模型generation_config.json配置
+
+```
+{
+  "bos_token_id": 151643,  // 开始符（Beginning of Sequence）的token ID
+  "pad_token_id": 151643,  // 填充符（Padding）的token ID，用于填充序列到相同长度
+  "do_sample": true,  // 是否使用采样生成文本，true表示使用采样策略而非贪婪解码
+  "eos_token_id": [  // 结束符（End of Sequence）的token ID，可以是单个值或列表
+    151645,  // 第一个结束符的token ID
+    151643   // 第二个结束符的token ID
+  ],
+  "repetition_penalty": 1.05,  // 重复惩罚系数，用于降低生成重复文本的概率，值大于1.0会减少重复
+  "temperature": 0.7,  // 温度参数，控制生成文本的随机性，值越低生成结果越确定，值越高越随机
+  "top_p": 0.8,  // Top-p（核采样）参数，仅从累积概率超过p的最小token集合中采样
+  "top_k": 20,  // Top-k参数，仅从概率最高的k个token中采样
+  "transformers_version": "4.37.0"  // 使用的transformers库版本
+}
+```
+
+Qwen2.5-72B-Instruct模型tokenizer_config.json配置
+```
+{
+  "add_bos_token": false,  // 是否在输入序列前添加开始符（Beginning of Sequence），false表示不添加
+  "add_prefix_space": false,  // 是否在输入文本前添加空格，false表示不添加
+  "added_tokens_decoder": {  // 解码器中添加的特殊token及其属性
+    "151643": {
+      "content": "<|endoftext|>",  // token内容
+      "lstrip": false,  // 是否在左侧去除空格，false表示不去除
+      "normalized": false,  // 是否进行归一化处理，false表示不处理
+      "rstrip": false,  // 是否在右侧去除空格，false表示不去除
+      "single_word": false,  // 是否作为单个单词处理，false表示不作为单个单词
+      "special": true  // 是否为特殊token，true表示是
+    },
+    "151644": {
+      "content": "<|im_start|>",
+      "lstrip": false,
+      "normalized": false,
+      "rstrip": false,
+      "single_word": false,
+      "special": true
+    },
+    "151645": {
+      "content": "<|im_end|>",
+      "lstrip": false,
+      "normalized": false,
+      "rstrip": false,
+      "single_word": false,
+      "special": true
+    },
+    ......
+  },
+  "additional_special_tokens": [  // 额外的特殊token列表
+    "<|im_start|>",
+    "<|im_end|>",
+    "<|object_ref_start|>",
+    "<|object_ref_end|>",
+    "<|box_start|>",
+    "<|box_end|>",
+    "<|quad_start|>",
+    "<|quad_end|>",
+    "<|vision_start|>",
+    "<|vision_end|>",
+    "<|vision_pad|>",
+    "<|image_pad|>",
+    "<|video_pad|>"
+  ],
+  "bos_token": null,  // 开始符（Beginning of Sequence），null表示未设置
+  "chat_template": "{%- if tools %}\n    {{- '<|im_start|>system\\n' }}\n    {%- if messages[0]['role'] == 'system' %}\n        {{- messages[0]['content'] }}\n    {%- else %}\n        {{- 'You are Qwen, created by Alibaba Cloud. You are a helpful assistant.' }}\n    {%- endif %}\n    {{- \"\\n\\n# Tools\\n\\nYou may call one or more functions to assist with the user query.\\n\\nYou are provided with function signatures within <tools></tools> XML tags:\\n<tools>\" }}\n    {%- for tool in tools %}\n        {{- \"\\n\" }}\n        {{- tool | tojson }}\n    {%- endfor %}\n    {{- \"\\n</tools>\\n\\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\\n<tool_call>\\n{\\\"name\\\": <function-name>, \\\"arguments\\\": <args-json-object>}\\n</tool_call><|im_end|>\\n\" }}\n{%- else %}\n    {%- if messages[0]['role'] == 'system' %}\n        {{- '<|im_start|>system\\n' + messages[0]['content'] + '<|im_end|>\\n' }}\n    {%- else %}\n        {{- '<|im_start|>system\\nYou are Qwen, created by Alibaba Cloud. You are a helpful assistant.<|im_end|>\\n' }}\n    {%- endif %}\n{%- endif %}\n{%- for message in messages %}\n    {%- if (message.role == \"user\") or (message.role == \"system\" and not loop.first) or (message.role == \"assistant\" and not message.tool_calls) %}\n        {{- '<|im_start|>' + message.role + '\\n' + message.content + '<|im_end|>' + '\\n' }}\n    {%- elif message.role == \"assistant\" %}\n        {{- '<|im_start|>' + message.role }}\n        {%- if message.content %}\n            {{- '\\n' + message.content }}\n        {%- endif %}\n        {%- for tool_call in message.tool_calls %}\n            {%- if tool_call.function is defined %}\n                {%- set tool_call = tool_call.function %}\n            {%- endif %}\n            {{- '\\n<tool_call>\\n{\"name\": \"' }}\n            {{- tool_call.name }}\n            {{- '\", \"arguments\": ' }}\n            {{- tool_call.arguments | tojson }}\n            {{- '}\\n</tool_call>' }}\n        {%- endfor %}\n        {{- '<|im_end|>\\n' }}\n    {%- elif message.role == \"tool\" %}\n        {%- if (loop.index0 == 0) or (messages[loop.index0 - 1].role != \"tool\") %}\n            {{- '<|im_start|>user' }}\n        {%- endif %}\n        {{- '\\n<tool_response>\\n' }}\n        {{- message.content }}\n        {{- '\\n</tool_response>' }}\n        {%- if loop.last or (messages[loop.index0 + 1].role != \"tool\") %}\n            {{- '<|im_end|>\\n' }}\n        {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|im_start|>assistant\\n' }}\n{%- endif %}\n",  // Jinja2 的聊天模板，用于生成对话格式
+  "clean_up_tokenization_spaces": false,  // 是否清理tokenization后的空格，false表示不清理
+  "eos_token": "<|im_end|>",  // 结束符（End of Sequence）
+  "errors": "replace",  // 处理错误的方式，replace表示用替换字符处理
+  "model_max_length": 131072,  // 模型支持的最大输入长度
+  "pad_token": "<|endoftext|>",  // 填充符（Padding）
+  "split_special_tokens": false,  // 是否拆分特殊token，false表示不拆分
+  "tokenizer_class": "Qwen2Tokenizer",  // tokenizer的类名
+  "unk_token": null  // 未知token，null表示未设置
+}
+```
+
+GPU硬件层面参数
+
+HF Transformers ：
+model_name_or_path: 模型路径
+device_map: 设备映射
+torch_dtype: 数据类型
+max_memory: 最大内存
+
+基于VLLM推理加速部署：
+model：模型路径
+tokenizer：tokenizer路径
+device：设备
+trust-remote-code：是否信任远程代码
+dtype：数据类型
+kv-cache-dtype：键值缓存数据类型（fp8, fp8_e5m2, fp8_e4m3）
+pipeline-parallel-size：管道并行大小
+tensor-parallel-size：张量并行大小
+gpu-memory-utilization：GPU内存利用率
 
 
 
