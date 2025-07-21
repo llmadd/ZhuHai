@@ -12,7 +12,7 @@ tags: ['Qwen3', 'vllm', 'Qwen3-235B-A22B-GPTQ-Int4', 'size_k must divisible by B
 status: 'published'
 ---
 
-
+<!-- Chinese Content -->
 # 关于使用Vllm/sglang部署Qwen3-235B-A22B-GPTQ-Int4出现报错
 
 最近使用8卡部署Qwen3-235B-A22B-GPTQ-Int4模型出现一系列错误类似`size_k must divisible by BLOCK_SIZE_K`或者sglang一直报显存不足问题参考[MoE models error](https://github.com/vllm-project/vllm/issues/17604)。
@@ -241,3 +241,6 @@ TP=4 减少了单卡的显存压力，支持更大的并发batch size。
 
 TP=4 的All-Reduce通信在低并发时显得冗余，但在高并发时被均匀分摊。
 
+<!-- English Content -->
+
+Content in production......
