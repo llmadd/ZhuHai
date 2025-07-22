@@ -4,7 +4,7 @@ title:
     en: 'MLP Implementation for Titanic Survival Prediction'
 date: '2025-07-22'
 author: 'Hai'
-coverImage: 'hhttps://www.kaggle.com/competitions/3136/images/header'
+coverImage: 'https://www.kaggle.com/competitions/3136/images/header'
 coverImageAlt:
     zh: '泰坦尼克号'
     en: 'Titanic Ship'
